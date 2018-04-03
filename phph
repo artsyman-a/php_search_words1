@@ -1,0 +1,52 @@
+<?php
+
+$text = "22 11 aa dd ff rdt 323 22";
+
+$min=strlen($text);
+$position1=0;
+$position2=0;
+$word1="22";
+$word2="11";
+$w1start=-1;
+$w2start=-1;
+
+$pattern = "/[\w\s\d]+/u";
+preg_match_all($pattern, $text, $result);
+$textClear = implode('', $result[0]); 
+$textClear = mb_strtolower($textClear);
+$piec = explode(" ", $textClear);
+
+for ($i=0; $i<count($piec) ; $i++)
+{
+if ($piec[$i] == $word1)
+{
+$position1=$i;
+$min = search($min, $position1, $position2);
+if ($w1start==-1) 
+$w1start=$position1;
+}
+else if ($piec[$i] == $word2)
+{
+$position2=$i;
+$min = search($min, $position2, $position1);
+if ($w2start==-1) 
+$w2start=$position2;
+} 
+}
+if ($piec[$position2]!=$piec[$position1]){
+echo "Минимум: ", $min-1, "<br/>", "Максимум: ";
+if ($position2-$w1start>=$position1-$w2start){
+echo abs($position2-$w1start)-1;
+}
+else echo abs($position1-$w2start)-1;}
+else echo "Не найдено!";
+
+function search($m, $p1, $p2)
+{
+if ($m>=abs($p1-$p2) 
+and abs($p1-$p2)>=1)
+{
+$m=abs($p1-$p2);
+}
+return $m;
+}
